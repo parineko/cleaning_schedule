@@ -246,6 +246,59 @@ body {
     border: 1px solid #e67e22;
 }
 
+.status-pending {
+    background: #ffc107;
+    color: #212529;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    display: block;
+    margin: 1px 0;
+    border: 1px solid #e0a800;
+}
+
+.status-assigned {
+    background: #28a745;
+    color: #ffffff;
+    padding: 4px 6px;
+    border-radius: 4px;
+    font-size: 10px;
+    display: block;
+    margin: 1px 0;
+    border: 1px solid #1e7e34;
+}
+
+.room-select {
+    padding: 2px 4px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 10px;
+    width: 80px;
+}
+
+.assign-btn, .change-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 9px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.assign-btn:hover, .change-btn:hover {
+    background: #0056b3;
+}
+
+.change-btn {
+    background: #6c757d;
+}
+
+.change-btn:hover {
+    background: #545b62;
+}
+
 .cleaning-required {
     background: #17a2b8;
     color: white;

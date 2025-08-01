@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部屋割り当て管理 - 清掃スケジュール自動化システム</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="system-title">清掃スケジュール自動化システム</h1>
+            <p class="system-subtitle">Beds24 API連携による自動化ソリューション</p>
+        </div>
+
+        <button class="back-btn" onclick="window.history.back()">← 戻る</button>
+
+        <div class="spreadsheet-demo">
+            <h2 class="demo-title">部屋割り当て管理</h2>
+            
+            <div class="spreadsheet-container">
+                <div class="sheet-tab">部屋割り当て状況</div>
+                
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>予約ID</th>
+                            <th>ゲスト名</th>
+                            <th>チェックイン</th>
+                            <th>チェックアウト</th>
+                            <th>部屋タイプ</th>
+                            <th>部屋番号</th>
+                            <th>ステータス</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>RES001</td>
+                            <td>田中太郎</td>
+                            <td>8/1 15:00</td>
+                            <td>8/3 11:00</td>
+                            <td>シングル</td>
+                            <td>
+                                <select class="room-select">
+                                    <option value="">未割り当て</option>
+                                    <option value="101">101</option>
+                                    <option value="102">102</option>
+                                    <option value="201">201</option>
+                                    <option value="202">202</option>
+                                </select>
+                            </td>
+                            <td><span class="status-pending">未割り当て</span></td>
+                            <td>
+                                <button class="assign-btn">割り当て</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RES002</td>
+                            <td>佐藤花子</td>
+                            <td>8/1 16:00</td>
+                            <td>8/2 10:00</td>
+                            <td>ダブル</td>
+                            <td>
+                                <select class="room-select">
+                                    <option value="">未割り当て</option>
+                                    <option value="301">301</option>
+                                    <option value="302">302</option>
+                                    <option value="401">401</option>
+                                </select>
+                            </td>
+                            <td><span class="status-pending">未割り当て</span></td>
+                            <td>
+                                <button class="assign-btn">割り当て</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RES003</td>
+                            <td>山田次郎</td>
+                            <td>8/2 14:00</td>
+                            <td>8/4 11:00</td>
+                            <td>シングル</td>
+                            <td>
+                                <select class="room-select">
+                                    <option value="">未割り当て</option>
+                                    <option value="101">101</option>
+                                    <option value="102">102</option>
+                                    <option value="201">201</option>
+                                    <option value="202">202</option>
+                                </select>
+                            </td>
+                            <td><span class="status-pending">未割り当て</span></td>
+                            <td>
+                                <button class="assign-btn">割り当て</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>RES004</td>
+                            <td>鈴木一郎</td>
+                            <td>8/1 18:00</td>
+                            <td>8/5 11:00</td>
+                            <td>ダブル</td>
+                            <td>301</td>
+                            <td><span class="status-assigned">割り当て済み</span></td>
+                            <td>
+                                <button class="change-btn">変更</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="spreadsheet-container">
+                <div class="sheet-tab">空室状況</div>
+                
+                <table class="calendar-table">
+                    <thead>
+                        <tr>
+                            <th>部屋番号</th>
+                            <th>部屋タイプ</th>
+                            <th>8/1</th>
+                            <th>8/2</th>
+                            <th>8/3</th>
+                            <th>8/4</th>
+                            <th>8/5</th>
+                            <th>8/6</th>
+                            <th>8/7</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="room-cell">101</td>
+                            <td>シングル</td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                        <tr>
+                            <td class="room-cell">102</td>
+                            <td>シングル</td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                        <tr>
+                            <td class="room-cell">201</td>
+                            <td>シングル</td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                        <tr>
+                            <td class="room-cell">202</td>
+                            <td>シングル</td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                        <tr>
+                            <td class="room-cell">301</td>
+                            <td>ダブル</td>
+                            <td><span class="status-occupied">宿泊中</span></td>
+                            <td><span class="status-occupied">宿泊中</span></td>
+                            <td><span class="status-occupied">宿泊中</span></td>
+                            <td><span class="status-occupied">宿泊中</span></td>
+                            <td><span class="status-checkout">OUT 11:00</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                        <tr>
+                            <td class="room-cell">302</td>
+                            <td>ダブル</td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                        <tr>
+                            <td class="room-cell">401</td>
+                            <td>ダブル</td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                            <td><span class="status-vacant">空室</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="note-section">
+                <h3 class="note-title">部屋割り当て管理について</h3>
+                <p class="note-content">
+                    チェックイン当日の朝に部屋割り当てを決定し、清掃スケジュールを自動更新します。<br>
+                    部屋タイプに応じて適切な部屋を選択し、空室状況を確認してから割り当てを行ってください。
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html> 
