@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>部屋稼働 & 清掃シフト - Beds24→清掃シフト自動化システム</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <div class="system-title">🏨 Beds24→清掃シフト自動化システム</div>
+            <div class="system-subtitle">予約データを自動取得してGoogleスプレッドシートでシフト管理</div>
+            <div class="workflow-brief">
+                Beds24 API → Google Apps Script → Googleスプレッドシート
+            </div>
+        </div>
+
+        <!-- 部屋稼働カレンダー画面 -->
+        <div class="screen active">
+            <button class="back-btn" onclick="window.location.href='../index.html'">← メインメニューへ戻る</button>
+            
+            <div class="spreadsheet-demo">
+                <div class="demo-title">📅 部屋稼働 & 清掃シフト（スプレッドシートイメージ図）</div>
+                
+                <div class="spreadsheet-container">
+                    <div class="sheet-tab">部屋稼働 & 清掃シフト統合表</div>
+                    <table class="calendar-table">
+                        <thead>
+                            <tr>
+                                <th class="room-header">部屋</th>
+                                <th>8/11(月)</th>
+                                <th>8/12(火)</th>
+                                <th>8/13(水)</th>
+                                <th>8/14(木)</th>
+                                <th>8/15(金)</th>
+                                <th>8/16(土)</th>
+                                <th>8/17(日)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="room-cell">101</td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">11:30-13:00 佐藤花子</span>
+                                    <span class="status-checkin">IN 15:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:30</span>
+                                    <span class="cleaning-required">11:00-12:30 佐藤花子</span>
+                                    <span class="status-checkin">IN 14:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-staying-cleaning">宿泊中(清掃要)</span>
+                                    <span class="cleaning-required">9:00-10:30 山田次郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">11:30-13:00 鈴木美咲</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">102</td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:00</span>
+                                    <span class="cleaning-required">10:30-12:00 田中太郎</span>
+                                    <span class="status-checkin">IN 14:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 9:30</span>
+                                    <span class="cleaning-required">10:00-11:30 山田次郎</span>
+                                    <span class="status-checkin">IN 13:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">11:30-13:00 佐藤花子</span>
+                                    <span class="status-checkin">IN 16:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-staying-cleaning">宿泊中(清掃要)</span>
+                                    <span class="cleaning-required">8:30-10:00 田中太郎</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">103</td>
+                                <td>
+                                    <span class="status-checkout">OUT 9:30</span>
+                                    <span class="cleaning-required">10:00-11:30 山田次郎</span>
+                                    <span class="status-checkin">IN 13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:30</span>
+                                    <span class="cleaning-required">12:00-13:30 田中太郎</span>
+                                    <span class="status-checkin">IN 15:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-staying-cleaning">宿泊中(清掃要)</span>
+                                    <span class="cleaning-required">9:00-10:30 鈴木美咲</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:30</span>
+                                    <span class="cleaning-required">11:00-12:30 佐藤花子</span>
+                                    <span class="status-checkin">IN 15:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">201</td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 16:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">11:30-13:00 山田次郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">202</td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:30</span>
+                                    <span class="cleaning-required">13:00-14:30 山田次郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 15:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">11:30-13:00 佐藤花子</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">203</td>
+                                <td>
+                                    <span class="status-checkout">OUT 9:00</span>
+                                    <span class="cleaning-required">10:30-12:00 山田次郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 14:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:00</span>
+                                    <span class="cleaning-required">10:30-12:00 田中太郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 16:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:30</span>
+                                    <span class="cleaning-required">11:00-12:30 鈴木美咲</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">301</td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 14:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">302</td>
+                                <td>
+                                    <span class="status-checkout">OUT 8:30</span>
+                                    <span class="cleaning-required">9:00-10:30 山田次郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 9:30</span>
+                                    <span class="cleaning-required">10:00-11:30 佐藤花子</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 15:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 9:00</span>
+                                    <span class="cleaning-required">9:30-11:00 鈴木美咲</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">401</td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:30</span>
+                                    <span class="cleaning-required">11:00-12:30 田中太郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 16:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:30</span>
+                                    <span class="cleaning-required">12:00-13:30 山田次郎</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 17:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html> 

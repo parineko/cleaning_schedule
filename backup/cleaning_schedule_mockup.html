@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beds24→清掃シフト自動化システム</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .system-title {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .system-subtitle {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .workflow-brief {
+            font-size: 14px;
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
+        /* 画面切り替え */
+        .screen {
+            display: none;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+        
+        /* メイン機能ボタン */
+        .main-menu {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .menu-item {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .menu-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .menu-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .menu-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.4;
+        }
+        
+        /* 戻るボタン */
+        .back-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: #5a67d8;
+        }
+        
+        /* スプレッドシートデモ */
+        .spreadsheet-demo {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .demo-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .spreadsheet-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            overflow-x: auto;
+        }
+        
+        .sheet-tab {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px 6px 0 0;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+        
+        .calendar-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+            margin-top: 0;
+            min-width: 800px;
+        }
+        
+        .calendar-table th,
+        .calendar-table td {
+            padding: 12px 8px;
+            text-align: center;
+            border: 1px solid #ddd;
+            position: relative;
+        }
+        
+        .calendar-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .calendar-table th.room-header {
+            background: #667eea;
+            color: white;
+            text-align: center;
+            width: 80px;
+        }
+        
+        .calendar-table td.room-cell {
+            background: #f0f4ff;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .calendar-table td {
+            background: white;
+            height: 50px;
+            vertical-align: middle;
+        }
+        
+        /* 宿泊ステータス */
+        .status-occupied {
+            background: #d4edda;
+            color: #155724;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            display: block;
+            margin: 1px 0;
+        }
+        
+        .status-checkout {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            display: block;
+            margin: 1px 0;
+        }
+        
+        .status-checkin {
+            background: #fff3cd;
+            color: #856404;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            display: block;
+            margin: 1px 0;
+        }
+        
+        .status-vacant {
+            background: #e2e3e5;
+            color: #6c757d;
+            padding: 4px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            display: block;
+            margin: 1px 0;
+        }
+        
+        .cleaning-required {
+            background: #17a2b8;
+            color: white;
+            padding: 3px 5px;
+            border-radius: 3px;
+            font-size: 9px;
+            display: block;
+            margin: 1px 0;
+            font-weight: bold;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            margin-top: 0;
+            min-width: 600px;
+        }
+        
+        .table th,
+        .table td {
+            padding: 10px 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+        }
+        
+        .table td {
+            background: white;
+        }
+        
+        .staff-assigned {
+            background: #cce5ff;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            color: #004085;
+            display: inline-block;
+        }
+        
+        .note-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-top: 20px;
+        }
+        
+        .note-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .note-content {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.6;
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            .main-menu {
+                grid-template-columns: 1fr;
+            }
+            
+            .spreadsheet-container {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <div class="system-title">🏨 Beds24→清掃シフト自動化システム</div>
+            <div class="system-subtitle">予約データを自動取得してGoogleスプレッドシートでシフト管理</div>
+            <div class="workflow-brief">
+                Beds24 API → Google Apps Script → Googleスプレッドシート
+            </div>
+        </div>
+
+        <!-- メイン画面 -->
+        <div id="main-screen" class="screen active">
+            <div class="main-menu">
+                <div class="menu-item" onclick="showScreen('calendar-screen')">
+                    <div class="menu-icon">📅</div>
+                    <div class="menu-title">部屋稼働 & 清掃シフト</div>
+                    <div class="menu-desc">週間カレンダーで宿泊状況と清掃担当者を一括管理<br>チェックアウト→清掃担当者の流れが一目で分かる</div>
+                </div>
+                
+                <div class="menu-item" onclick="showScreen('schedule-screen')">
+                    <div class="menu-icon">📋</div>
+                    <div class="menu-title">清掃スケジュール詳細</div>
+                    <div class="menu-desc">カレンダーから抽出した清掃予定をリスト表示<br>時系列での確認・完了チェック用</div>
+                </div>
+                
+                <div class="menu-item" onclick="showScreen('staff-screen')">
+                    <div class="menu-icon">👥</div>
+                    <div class="menu-title">スタッフ基本情報</div>
+                    <div class="menu-desc">清掃スタッフの勤務時間・連絡先を管理<br>シフト自動割り当ての基礎データ</div>
+                </div>
+            </div>
+
+            <div class="note-section">
+                <div class="note-title">💡 システムの概要</div>
+                <div class="note-content">
+                    ・Beds24 APIから予約データを自動取得<br>
+                    ・週間カレンダーで部屋の稼働状況を可視化<br>
+                    ・チェックアウト後の清掃タイミングに自動で担当者を割り当て<br>
+                    ・メイン画面で全体把握、詳細画面で時系列確認が可能
+                </div>
+            </div>
+        </div>
+
+        <!-- 部屋稼働カレンダー画面 -->
+        <div id="calendar-screen" class="screen">
+            <button class="back-btn" onclick="showScreen('main-screen')">← メインメニューへ戻る</button>
+            
+            <div class="spreadsheet-demo">
+                <div class="demo-title">📅 部屋稼働 & 清掃シフト（スプレッドシートイメージ図）</div>
+                
+                <div class="spreadsheet-container">
+                    <div class="sheet-tab">部屋稼働 & 清掃シフト統合表</div>
+                    <table class="calendar-table">
+                        <thead>
+                            <tr>
+                                <th class="room-header">部屋</th>
+                                <th>8/11(月)</th>
+                                <th>8/12(火)</th>
+                                <th>8/13(水)</th>
+                                <th>8/14(木)</th>
+                                <th>8/15(金)</th>
+                                <th>8/16(土)</th>
+                                <th>8/17(日)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="room-cell">101</td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">🧹 田中さん 11:30-13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 15:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">🧹 鈴木さん 11:30-13:00</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">102</td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:00</span>
+                                    <span class="cleaning-required">🧹 田中さん 10:30-12:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 16:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">201</td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 16:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">🧹 山田さん 11:30-13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">202</td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 10:30</span>
+                                    <span class="cleaning-required">🧹 田中さん 11:00-12:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 15:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkout">OUT 11:00</span>
+                                    <span class="cleaning-required">🧹 佐藤さん 11:30-13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">301</td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空室</span>
+                                </td>
+                                <td>
+                                    <span class="status-checkin">IN 14:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                                <td>
+                                    <span class="status-occupied">宿泊中</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 清掃シフト画面 -->
+        <div id="schedule-screen" class="screen">
+            <button class="back-btn" onclick="showScreen('main-screen')">← メインメニューへ戻る</button>
+            
+            <div class="spreadsheet-demo">
+                <div class="demo-title">📋 清掃スケジュール詳細（スプレッドシートイメージ図）</div>
+                
+                <div class="spreadsheet-container">
+                    <div class="sheet-tab">スタッフ別清掃スケジュール</div>
+                    <table class="calendar-table">
+                        <thead>
+                            <tr>
+                                <th class="room-header">日付</th>
+                                <th>田中太郎<br><small>9:00-17:00</small></th>
+                                <th>佐藤花子<br><small>10:00-18:00</small></th>
+                                <th>山田次郎<br><small>8:00-16:00</small></th>
+                                <th>鈴木美咲<br><small>13:00-19:00</small></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="room-cell">8/11(月)</td>
+                                <td>
+                                    <span class="cleaning-required">🧹 102号室<br>10:30-12:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">8/12(火)</td>
+                                <td>
+                                    <span class="cleaning-required">🧹 101号室<br>11:30-13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">8/13(水)</td>
+                                <td>
+                                    <span class="cleaning-required">🧹 202号室<br>11:00-12:30</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">8/14(木)</td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">🧹 201号室<br>11:30-13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">8/15(金)</td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">8/16(土)</td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">🧹 202号室<br>11:30-13:00</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">8/17(日)</td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">🧹 101号室<br>11:30-13:00</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="note-section">
+                    <div class="note-title">💡 この表の特徴</div>
+                    <div class="note-content">
+                        各スタッフの稼働状況が一目で分かる<br>
+                        ・🧹 = 清掃予定（部屋番号 + 時間）<br>
+                        ・空き = 勤務日だが予定なし（追加作業可能）<br>
+                        ・休み = 勤務日ではない
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 清掃スタッフ管理画面 -->
+        <div id="staff-screen" class="screen">
+            <button class="back-btn" onclick="showScreen('main-screen')">← メインメニューへ戻る</button>
+            
+            <div class="spreadsheet-demo">
+                <div class="demo-title">👥 清掃スタッフ基本情報（スプレッドシートイメージ図）</div>
+                
+                <div class="spreadsheet-container">
+                    <div class="sheet-tab">スタッフ基本情報</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>スタッフ名</th>
+                                <th>勤務開始時間</th>
+                                <th>勤務終了時間</th>
+                                <th>勤務曜日</th>
+                                <th>連絡先</th>
+                                <th>備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>田中太郎</td>
+                                <td>09:00</td>
+                                <td>17:00</td>
+                                <td>月・火・水・木・金</td>
+                                <td>080-1234-5678</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>佐藤花子</td>
+                                <td>10:00</td>
+                                <td>18:00</td>
+                                <td>火・水・木・金・土</td>
+                                <td>090-2345-6789</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>山田次郎</td>
+                                <td>08:00</td>
+                                <td>16:00</td>
+                                <td>月・水・金</td>
+                                <td>070-3456-7890</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>鈴木美咲</td>
+                                <td>13:00</td>
+                                <td>19:00</td>
+                                <td>土・日</td>
+                                <td>080-4567-8901</td>
+                                <td>土日専門</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showScreen(screenId) {
+            // すべての画面を非表示
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            
+            // 指定した画面を表示
+            document.getElementById(screenId).classList.add('active');
+        }
+    </script>
+</body>
+</html>

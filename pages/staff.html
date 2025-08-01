@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スタッフ基本情報 - Beds24→清掃シフト自動化システム</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <div class="system-title">🏨 Beds24→清掃シフト自動化システム</div>
+            <div class="system-subtitle">予約データを自動取得してGoogleスプレッドシートでシフト管理</div>
+            <div class="workflow-brief">
+                Beds24 API → Google Apps Script → Googleスプレッドシート
+            </div>
+        </div>
+
+        <!-- 清掃スタッフ管理画面 -->
+        <div class="screen active">
+            <button class="back-btn" onclick="window.location.href='../index.html'">← メインメニューへ戻る</button>
+            
+            <div class="spreadsheet-demo">
+                <div class="demo-title">👥 清掃スタッフ基本情報（スプレッドシートイメージ図）</div>
+                
+                <div class="spreadsheet-container">
+                    <div class="sheet-tab">スタッフ基本情報</div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>スタッフ名</th>
+                                <th>勤務開始時間</th>
+                                <th>勤務終了時間</th>
+                                <th>勤務曜日</th>
+                                <th>連絡先</th>
+                                <th>備考</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>田中太郎</td>
+                                <td>09:00</td>
+                                <td>17:00</td>
+                                <td>月・火・水・木・金</td>
+                                <td>080-1234-5678</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>佐藤花子</td>
+                                <td>10:00</td>
+                                <td>18:00</td>
+                                <td>火・水・木・金・土</td>
+                                <td>090-2345-6789</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>山田次郎</td>
+                                <td>08:00</td>
+                                <td>16:00</td>
+                                <td>月・水・金</td>
+                                <td>070-3456-7890</td>
+                                <td>-</td>
+                            </tr>
+                            <tr>
+                                <td>鈴木美咲</td>
+                                <td>13:00</td>
+                                <td>19:00</td>
+                                <td>土・日</td>
+                                <td>080-4567-8901</td>
+                                <td>土日専門</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html> 

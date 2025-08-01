@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>清掃スケジュール詳細 - Beds24→清掃シフト自動化システム</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <div class="system-title">🏨 Beds24→清掃シフト自動化システム</div>
+            <div class="system-subtitle">予約データを自動取得してGoogleスプレッドシートでシフト管理</div>
+            <div class="workflow-brief">
+                Beds24 API → Google Apps Script → Googleスプレッドシート
+            </div>
+        </div>
+
+        <!-- 清掃シフト画面 -->
+        <div class="screen active">
+            <button class="back-btn" onclick="window.location.href='../index.html'">← メインメニューへ戻る</button>
+            
+            <div class="spreadsheet-demo">
+                <div class="demo-title">📋 清掃スケジュール詳細（スプレッドシートイメージ図）</div>
+                
+                <div class="spreadsheet-container">
+                    <div class="sheet-tab">スタッフ別清掃スケジュール</div>
+                    <table class="calendar-table">
+                        <thead>
+                            <tr>
+                                <th class="room-header">スタッフ</th>
+                                <th>8/11(月)</th>
+                                <th>8/12(火)</th>
+                                <th>8/13(水)</th>
+                                <th>8/14(木)</th>
+                                <th>8/15(金)</th>
+                                <th>8/16(土)</th>
+                                <th>8/17(日)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="room-cell">田中太郎<br><small>9:00-17:00</small></td>
+                                <td>
+                                    <span class="cleaning-required">10:30-12:00 102号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">11:30-13:00 101号室</span><br>
+                                    <span class="cleaning-required">12:00-13:30 103号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">11:00-12:30 202号室</span><br>
+                                    <span class="cleaning-required">10:00-11:30 102号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">10:30-12:00 203号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">11:30-13:00 102号室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">8:30-10:00 102号室</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">佐藤花子<br><small>10:00-18:00</small></td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">10:00-11:30 302号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">11:00-12:30 103号室</span><br>
+                                    <span class="cleaning-required">11:30-13:00 102号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">11:30-13:00 202号室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">山田次郎<br><small>8:00-16:00</small></td>
+                                <td>
+                                    <span class="cleaning-required">9:00-10:30 302号室</span><br>
+                                    <span class="cleaning-required">10:30-12:00 203号室</span><br>
+                                    <span class="cleaning-required">13:00-14:30 103号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">10:00-11:30 102号室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">11:30-13:00 201号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">12:00-13:30 401号室</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">9:00-10:30 101号室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="room-cell">鈴木美咲<br><small>13:00-19:00</small></td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">9:00-10:30 103号室</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">休み</span>
+                                </td>
+                                <td>
+                                    <span class="status-vacant">空き</span>
+                                </td>
+                                <td>
+                                    <span class="cleaning-required">9:30-11:00 302号室</span><br>
+                                    <span class="cleaning-required">11:00-12:30 203号室</span><br>
+                                    <span class="cleaning-required">13:00-14:30 101号室</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="note-section">
+                    <div class="note-title">💡 この表の特徴</div>
+                    <div class="note-content">
+                        各スタッフの稼働状況が一目で分かる<br>
+                        ・🧹 = 清掃予定（部屋番号 + 時間）<br>
+                        ・空き = 勤務日だが予定なし（追加作業可能）<br>
+                        ・休み = 勤務日ではない
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/app.js"></script>
+</body>
+</html> 
